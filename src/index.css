@@ -1,6 +1,8 @@
 :root {
-  --color-primary: #6741d9;
-  --color-primary-light: #7950f2;
+  /* --color-primary: #6741d9;
+  --color-primary-light: #7950f2; */
+  --color-primary: #ffc900;
+  --color-primary-light: #3d3d3d;
   --color-text: #dee2e6;
   --color-text-dark: #adb5bd;
   --color-background-100: #343a40;
@@ -93,6 +95,10 @@ body {
   display: flex;
   align-items: center;
   gap: 0.8rem;
+  width: 180px;
+  background-color: #212529;
+  padding: 4px 10px;
+  border-radius: 70px 5px;
 }
 
 .logo span {
@@ -102,10 +108,11 @@ body {
 .logo h1 {
   font-size: 2.4rem;
   font-weight: 600;
-  color: #fff;
+  color: #ddd;
 }
 
 .search {
+  text-align: center;
   justify-self: center;
   border: none;
   padding: 1.1rem 1.6rem;
@@ -115,8 +122,9 @@ body {
   transition: all 0.3s;
   color: var(--color-text);
 
+  background-color: #212529;
   /* background-color: var(--color-background-900); */
-  background-color: var(--color-primary-light);
+  /* background-color: var(--color-primary-light); */
 }
 
 .search::placeholder {
@@ -132,6 +140,10 @@ body {
 .num-results {
   justify-self: end;
   font-size: 1.8rem;
+  color: #ddd;
+  background-color: #212529;
+  padding: 8px;
+  border-radius: 0.7rem;
 }
 
 .btn-toggle {
