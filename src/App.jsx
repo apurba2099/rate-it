@@ -1,30 +1,35 @@
 import { useState } from "react";
 import { tempMovieData, tempWatchedData } from "./Data/data";
 
+const average = (arr) =>
+  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+
+//Structural Component
 export default function App() {
+  const [movies, setMovies] = useState(tempMovieData);
+
   return (
     <>
       {/* NAVBAR COMPONENT  */}
-      <NavBar />
+      <NavBar movies={movies} />
       {/* MAIN COMPONENT  */}
-      <Main />
+      <Main movies={movies} />
     </>
   );
 }
 
-const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-
-function NavBar() {
+//Structural Component
+function NavBar({ movies }) {
   return (
     <nav className="nav-bar">
       <Logo />
       <Search />
-      <NumResult />
+      <NumResult movies={movies} />
     </nav>
   );
 }
 
+//Statless Componet
 function Logo() {
   return (
     <div className="logo">
@@ -34,14 +39,14 @@ function Logo() {
   );
 }
 
-function NumResult() {
+function NumResult({ movies }) {
   return (
     <p className="num-results">
-      Found <strong>56</strong> results
+      Found <strong>{movies.length}</strong> results
     </p>
   );
 }
-
+//Stateful Component
 function Search() {
   const [query, setQuery] = useState("");
   return (
@@ -55,11 +60,11 @@ function Search() {
   );
 }
 
-function Main() {
+function Main({ movies }) {
   return (
     <>
       <main className="main">
-        <ListBox />
+        <ListBox movies={movies} />
         <Watchedbox />
       </main>
     </>
@@ -67,7 +72,7 @@ function Main() {
 }
 
 // MAIN BOX SECTION-1
-function ListBox() {
+function ListBox({ movies }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -78,13 +83,12 @@ function ListBox() {
         {isOpen1 ? "–" : "+"}
       </button>
 
-      {isOpen1 && <MovieList />}
+      {isOpen1 && <MovieList movies={movies} />}
     </div>
   );
 }
 
-function MovieList() {
-  const [movies, setMovies] = useState(tempMovieData);
+function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
@@ -94,6 +98,7 @@ function MovieList() {
   );
 }
 
+//Stateless or presentational Component
 function Movie({ movie }) {
   return (
     <li>
