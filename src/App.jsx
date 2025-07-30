@@ -11,22 +11,26 @@ export default function App() {
   return (
     <>
       {/* NAVBAR COMPONENT  */}
-      <NavBar movies={movies} />
+      <NavBar>
+        <Logo />
+        <Search />
+        <NumResult movies={movies} />
+      </NavBar>
+
       {/* MAIN COMPONENT  */}
-      <Main movies={movies} />
+      <Main>
+        <ListBox>
+          <MovieList movies={movies} />
+        </ListBox>
+        <Watchedbox />
+      </Main>
     </>
   );
 }
 
 //Structural Component
-function NavBar({ movies }) {
-  return (
-    <nav className="nav-bar">
-      <Logo />
-      <Search />
-      <NumResult movies={movies} />
-    </nav>
-  );
+function NavBar({ children }) {
+  return <nav className="nav-bar">{children}</nav>;
 }
 
 //Statless Componet
@@ -60,19 +64,16 @@ function Search() {
   );
 }
 
-function Main({ movies }) {
+function Main({ children }) {
   return (
     <>
-      <main className="main">
-        <ListBox movies={movies} />
-        <Watchedbox />
-      </main>
+      <main className="main">{children}</main>
     </>
   );
 }
 
 // MAIN BOX SECTION-1
-function ListBox({ movies }) {
+function ListBox({ children }) {
   const [isOpen1, setIsOpen1] = useState(true);
   return (
     <div className="box">
@@ -83,7 +84,7 @@ function ListBox({ movies }) {
         {isOpen1 ? "–" : "+"}
       </button>
 
-      {isOpen1 && <MovieList movies={movies} />}
+      {isOpen1 && children}
     </div>
   );
 }
