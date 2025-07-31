@@ -20,6 +20,19 @@ export default function App() {
 
       {/* MAIN COMPONENT  */}
       <Main>
+        {/* Explicit Props- Just for learning
+        <Box element={<MovieList movies={movies} />} />
+
+        <Box
+          element={
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          }
+        /> */}
+
+        {/* BEST FOR NOW AND MORE PREFERRED WAY */}
         <Box>
           <MovieList movies={movies} />
         </Box>
