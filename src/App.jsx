@@ -12,17 +12,25 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
 
+  const query = "Hulk";
+
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
-      //API Check
-      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=Hulk`)
-        .then((res) => res.json())
-        .then((data) => setMovies(data.Search));
+      async function fetchMovies() {
+        //API Check
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        );
+
+        const data = await res.json();
+        setMovies(data.Search);
+        console.log(data.Search);
+      }
+      fetchMovies();
     },
     [] //dependency array
   );
-
   return (
     <>
       {/* NAVBAR COMPONENT  */}
