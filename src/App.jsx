@@ -12,12 +12,17 @@ export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
 
+  //Loader for loading
+  const [isLoading, setIsLoading] = useState(false);
+
+  //Set as a default query to view in the UI
   const query = "Hulk";
 
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
       async function fetchMovies() {
+        setIsLoading(true);
         //API Check
         const res = await fetch(
           `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
@@ -25,7 +30,7 @@ export default function App() {
 
         const data = await res.json();
         setMovies(data.Search);
-        console.log(data.Search);
+        setIsLoading(false);
       }
       fetchMovies();
     },
@@ -55,9 +60,7 @@ export default function App() {
         /> */}
 
         {/* BEST FOR NOW AND MORE PREFERRED WAY */}
-        <Box>
-          <MovieList movies={movies} />
-        </Box>
+        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
 
         <Box>
           <WatchedSummary watched={watched} />
@@ -66,6 +69,11 @@ export default function App() {
       </Main>
     </>
   );
+}
+
+//Loader
+function Loader() {
+  return <span class="loader"></span>;
 }
 
 //Structural Component
