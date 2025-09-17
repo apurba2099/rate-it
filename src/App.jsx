@@ -1,13 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tempMovieData, tempWatchedData } from "./Data/data";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
+// API KEY
+const KEY = "a81ca967";
+
 //Structural Component
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+
+  // Check useEffect Add the API (As a side effect)
+  useEffect(
+    function () {
+      //API Check
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=Hulk`)
+        .then((res) => res.json())
+        .then((data) => setMovies(data.Search));
+    },
+    [] //dependency array
+  );
 
   return (
     <>
