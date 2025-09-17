@@ -15,22 +15,37 @@ export default function App() {
   //Loader for loading
   const [isLoading, setIsLoading] = useState(false);
 
+  //Set Error Message
+  const [error, setError] = useState("");
+
   //Set as a default query to view in the UI
-  const query = "Hulk";
+  const query = "seasdfas";
 
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
       async function fetchMovies() {
-        setIsLoading(true);
-        //API Check
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
-        );
+        try {
+          setIsLoading(true);
+          //API Check
+          const res = await fetch(
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          );
+          const data = await res.json();
 
-        const data = await res.json();
-        setMovies(data.Search);
-        setIsLoading(false);
+          if (!res.ok) throw new Error("Something went with fetching movies!");
+
+          if (data.Response === "False")
+            throw new Error("Oops! Movie Not Found!");
+
+          setMovies(data.Search);
+          setIsLoading(false);
+        } catch (err) {
+          console.error(err.message);
+          setError(err.message);
+        } finally {
+          setIsLoading(false);
+        }
       }
       fetchMovies();
     },
@@ -60,7 +75,12 @@ export default function App() {
         /> */}
 
         {/* BEST FOR NOW AND MORE PREFERRED WAY */}
-        <Box>{isLoading ? <Loader /> : <MovieList movies={movies} />}</Box>
+        <Box>
+          {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
+        </Box>
 
         <Box>
           <WatchedSummary watched={watched} />
@@ -73,9 +93,18 @@ export default function App() {
 
 //Loader
 function Loader() {
-  return <span class="loader"></span>;
+  return <span className="loader"></span>;
 }
 
+//Error message component
+function ErrorMessage({ message }) {
+  return (
+    <p className="error">
+      <span>⚠️</span>
+      <strong>{message}</strong>
+    </p>
+  );
+}
 //Structural Component
 function NavBar({ children }) {
   return <nav className="nav-bar">{children}</nav>;
