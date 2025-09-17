@@ -11,6 +11,7 @@ const KEY = "a81ca967";
 export default function App() {
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
+  const [query, setQuery] = useState("");
 
   //Loader for loading
   const [isLoading, setIsLoading] = useState(false);
@@ -19,14 +20,36 @@ export default function App() {
   const [error, setError] = useState("");
 
   //Set as a default query to view in the UI
-  const query = "seasdfas";
+  // const tempQuery = "Titanic";
+
+  /*
+  //Just Test useEffect 
+  useEffect(function () {
+    console.log("After initial render");
+  }, []);
+  useEffect(function () {
+    console.log("After every renders");
+  });
+
+  useEffect(
+    function () {
+      console.log("D");
+    },
+    [query]
+  );
+  console.log("During render");
+*/
 
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
       async function fetchMovies() {
         try {
+          //Set loading
           setIsLoading(true);
+
+          // Set reset the error message
+          setError("");
           //API Check
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
@@ -39,7 +62,6 @@ export default function App() {
             throw new Error("Oops! Movie Not Found!");
 
           setMovies(data.Search);
-          setIsLoading(false);
         } catch (err) {
           console.error(err.message);
           setError(err.message);
@@ -47,16 +69,23 @@ export default function App() {
           setIsLoading(false);
         }
       }
+
+      if (query.length < 3) {
+        setMovies([]);
+        setError("");
+        return;
+      }
+
       fetchMovies();
     },
-    [] //dependency array
+    [query] //dependency array
   );
   return (
     <>
       {/* NAVBAR COMPONENT  */}
       <NavBar>
         <Logo />
-        <Search />
+        <Search query={query} setQuery={setQuery} />
         <NumResult movies={movies} />
       </NavBar>
 
@@ -128,8 +157,7 @@ function NumResult({ movies }) {
   );
 }
 //Stateful Component
-function Search() {
-  const [query, setQuery] = useState("");
+function Search({ query, setQuery }) {
   return (
     <input
       className="search"
