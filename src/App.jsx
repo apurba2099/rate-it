@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { tempMovieData, tempWatchedData } from "./Data/data";
+// import { tempMovieData, tempWatchedData } from "./Data/data";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
@@ -9,9 +9,9 @@ const KEY = "a81ca967";
 
 //Structural Component
 export default function App() {
+  const [query, setQuery] = useState("Avengers");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-  const [query, setQuery] = useState("");
 
   //Loader for loading
   const [isLoading, setIsLoading] = useState(false);
@@ -19,9 +19,8 @@ export default function App() {
   //Set Error Message
   const [error, setError] = useState("");
 
-  //Set as a default query to view in the UI
-  // const tempQuery = "Titanic";
-
+  //Selection of the left side movies to the right side feature
+  const [selectedId, setSelectedId] = useState(null);
   /*
   //Just Test useEffect 
   useEffect(function () {
@@ -40,6 +39,13 @@ export default function App() {
   console.log("During render");
 */
 
+  //Handle Function
+  function handelSelectMovie(id) {
+    setSelectedId((selectedId) => (id === selectedId ? null : id));
+  }
+  function handleCloseMovie() {
+    setSelectedId(null);
+  }
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
@@ -62,6 +68,7 @@ export default function App() {
             throw new Error("Oops! Movie Not Found!");
 
           setMovies(data.Search);
+          console.log(data.Search);
         } catch (err) {
           console.error(err.message);
           setError(err.message);
@@ -107,13 +114,24 @@ export default function App() {
         <Box>
           {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
           {isLoading && <Loader />}
-          {!isLoading && !error && <MovieList movies={movies} />}
+          {!isLoading && !error && (
+            <MovieList movies={movies} onSelectMovie={handelSelectMovie} />
+          )}
           {error && <ErrorMessage message={error} />}
         </Box>
 
         <Box>
-          <WatchedSummary watched={watched} />
-          <WatchedMoviesList watched={watched} />
+          {selectedId ? (
+            <MovieDetails
+              selectId={selectedId}
+              onCloseMovie={handleCloseMovie}
+            />
+          ) : (
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMoviesList watched={watched} />
+            </>
+          )}
         </Box>
       </Main>
     </>
@@ -216,20 +234,20 @@ function Box({ children }) {
 //   );
 // }
 
-function MovieList({ movies }) {
+function MovieList({ movies, onSelectMovie }) {
   return (
-    <ul className="list">
+    <ul className="list list-movies">
       {movies?.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie movie={movie} key={movie.imdbID} onSelectMovie={onSelectMovie} />
       ))}
     </ul>
   );
 }
 
 //Stateless or presentational Component
-function Movie({ movie }) {
+function Movie({ movie, onSelectMovie, onCloseMovie }) {
   return (
-    <li>
+    <li onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -239,6 +257,18 @@ function Movie({ movie }) {
         </p>
       </div>
     </li>
+  );
+}
+
+//Selected Movie Component
+function MovieDetails({ selectId, onCloseMovie }) {
+  return (
+    <div className="details">
+      <button className="btn-back" onClick={onCloseMovie}>
+        <strong> &larr;</strong>
+      </button>
+      {selectId}
+    </div>
   );
 }
 
