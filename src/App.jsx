@@ -341,6 +341,16 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
       if (!title) return;
 
       document.title = `Movie | ${title}`;
+
+      //Clean up function
+      return function () {
+        document.title = "RateIt";
+
+        //A importan concept here to see
+        console.log(`Clean up effect for movie ${title}`);
+
+        // **It represent the javascript concept closure concept where that after function completly exection but still remember the previous one value!
+      };
     },
     [title]
   );
