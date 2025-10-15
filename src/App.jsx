@@ -334,6 +334,17 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
     [selectId] // The dependecy array selected when click any movie selectedid then it on screen
   );
 
+  //The index.html title change side effect
+  useEffect(
+    function () {
+      //Fixing issue when first click to show the undefined in the begining!
+      if (!title) return;
+
+      document.title = `Movie | ${title}`;
+    },
+    [title]
+  );
+
   return (
     <div className="details">
       {isLoading ? (
@@ -341,7 +352,24 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
       ) : (
         <>
           <header>
-            <button className="btn-back" onClick={onCloseMovie}>
+            <button
+              style={{
+                position: "absolute",
+                top: "0",
+                left: "0",
+                lineHeight: "1",
+                textAlign: "justify",
+                padding: "3px",
+                fontSize: "2.6rem",
+                fontWeight: "900",
+                height: "42px",
+                width: "42px",
+                backgroundColor: "#5c7991ab",
+                color: "#fff",
+              }}
+              className="btn-back"
+              onClick={onCloseMovie}
+            >
               <strong> &larr;</strong>
             </button>
 
