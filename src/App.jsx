@@ -9,7 +9,7 @@ const KEY = "a81ca967";
 
 //Structural Component
 export default function App() {
-  const [query, setQuery] = useState("Avengers");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
 
@@ -24,19 +24,19 @@ export default function App() {
   /*
   //Just Test useEffect 
   useEffect(function () {
-    console.log("After initial render");
+    // console.log("After initial render");
   }, []);
   useEffect(function () {
-    console.log("After every renders");
+    // console.log("After every renders");
   });
 
   useEffect(
     function () {
-      console.log("D");
+      // console.log("D");
     },
     [query]
   );
-  console.log("During render");
+  // console.log("During render");
 */
 
   //HANDEL FUNCTION ⚙️
@@ -105,6 +105,9 @@ export default function App() {
         setError("");
         return;
       }
+
+      //Close every search before the movie details page
+      handleCloseMovie();
 
       fetchMovies();
 
@@ -333,6 +336,29 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
     onCloseMovie();
   }
 
+  // Keypress handler where close the movie details by "Escape"
+  useEffect(
+    function () {
+      // For reuseable function to use this callback function!
+      function callBack(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+          // console.log("CLOSING!");
+        }
+      }
+
+      // Basic document DOM event
+      document.addEventListener("keydown", callBack);
+
+      //Clean up function
+      return function () {
+        document.removeEventListener("keydown", callBack);
+      };
+    },
+
+    [onCloseMovie] //depency
+  );
+
   useEffect(
     function () {
       //Loading Movie Details
@@ -363,7 +389,7 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
         document.title = "RateIt";
 
         //A importan concept here to see
-        console.log(`Clean up effect for movie ${title}`);
+        // console.log(`Clean up effect for movie ${title}`);
 
         // **It represent the javascript concept closure concept where that after function completly exection but still remember the previous one value!
       };
@@ -466,7 +492,7 @@ function WatchedSummary({ watched }) {
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
           <span>⏳</span>
