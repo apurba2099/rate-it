@@ -61,6 +61,11 @@ export default function App() {
   // Check useEffect Add the API (As a side effect)
   useEffect(
     function () {
+      //This method use for prevent the race condition when ever search a movie letter into the search box concurrently word search the api hits and browser makes slow and search hit the anomaly out comes!
+
+      //This is a browser API (Native API)
+      const controller = new AbortController();
+
       async function fetchMovies() {
         try {
           //Set loading
@@ -70,8 +75,10 @@ export default function App() {
           setError("");
           //API Check
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            { signal: controller.signal }
           );
+
           const data = await res.json();
 
           if (!res.ok) throw new Error("Something went with fetching movies!");
@@ -81,9 +88,13 @@ export default function App() {
 
           setMovies(data.Search);
           // console.log(data.Search);
+          setError("");
         } catch (err) {
-          console.error(err.message);
-          setError(err.message);
+          // console.error(err.message);
+
+          if (err.name !== "AbortError") {
+            setError(err.message);
+          }
         } finally {
           setIsLoading(false);
         }
@@ -96,6 +107,11 @@ export default function App() {
       }
 
       fetchMovies();
+
+      //** This is a clean up function to call the prevent method to use ! controller abort function
+      return function () {
+        controller.abort();
+      };
     },
     [query] //dependency array
   );
