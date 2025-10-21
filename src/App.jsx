@@ -75,7 +75,7 @@ export default function App() {
           setError("");
           //API Check
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+            `https://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
             { signal: controller.signal }
           );
 
@@ -365,7 +365,7 @@ function MovieDetails({ selectId, onCloseMovie, onAddWatched, watched }) {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&i=${selectId}`
+          `https://www.omdbapi.com/?apikey=${KEY}&i=${selectId}`
         );
         const data = await res.json();
         setMovie(data);
